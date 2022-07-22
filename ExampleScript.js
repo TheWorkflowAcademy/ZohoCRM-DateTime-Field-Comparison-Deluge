@@ -12,8 +12,10 @@ if (opps.size() > 0)
 		{
 			for each om in oppMessages
 			{
+				// Format createdTime
 				createdTime = om.get("Created_Time");
 				createdTime_f = createdTime.left(createdTime.indexOf("T")).toDate() + " " + createdTime.subString(createdTime.indexOf("T")+1,createdTime.lastIndexOf("-"));
+				// Make comparison
 				if (latestDate.toDateTime() < createdTime_f.toDateTime())
 				{
 					latestDate = createdTime_f;
@@ -32,6 +34,7 @@ if (!oppLatestDateMap.isEmpty())
 	latestDate = "01-Jan-1900 00:00:00";
 	for each oldm in oppLatestDateMap.keys()
 	{
+		// Make comparison
 		if (latestDate.toDateTime() < oppLatestDateMap.get(oldm).toDateTime())
 		{
 			latestOppId = oldm;

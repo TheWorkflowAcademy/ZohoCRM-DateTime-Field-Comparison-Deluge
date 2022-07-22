@@ -14,7 +14,7 @@ if (opps.size() > 0)
 			{
 				// Format createdTime
 				createdTime = om.get("Created_Time");
-				createdTime_f = createdTime.left(createdTime.indexOf("T")).toDate() + " " + createdTime.subString(createdTime.indexOf("T")+1,createdTime.lastIndexOf("-"));
+				createdTime_f = createdTime.replaceAll("T"," ").toDateTime();
 				// Make comparison
 				if (latestDate.toDateTime() < createdTime_f.toDateTime())
 				{

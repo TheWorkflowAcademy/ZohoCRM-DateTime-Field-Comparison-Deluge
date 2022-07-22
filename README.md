@@ -2,7 +2,9 @@
 A quick script for comparing Zoho CRM date time fields with a use case.
 
 ## Problem Statement
-Zoho CRM Date Time fields are stored in this format - "2022-07-20T17:21:37-05:00", which is annoyingly not a valid date time format in Deluge. In order to perform date time comparisons or apply any date time functions in Deluge, we need to format it into "20-Jul-2022 17:21:37" and apply a `.toDateTime()` function.
+Zoho CRM Date Time fields are stored in this format - "2022-07-20T17:21:37-05:00", which is not recognized as a timestamp in Deluge. In order to perform date time comparisons or apply any date time functions in Deluge, we need to format it into "20-Jul-2022 17:21:37" and apply a `.toDateTime()` function.
+
+ℹ️ `YYYY-MM-DDThh:mm:ssZ` Date Time format is an [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format. 
 
 This article is meant to save some time in converting date time fields.
 
@@ -22,13 +24,13 @@ info "------------------";
 ```
 
 ### Format the Dates
-- Apply some text manipulation to format the date time field to the required format in Deluge
-- If you're using purely for date time comparison (to find out which is more recent / earlier) like in this exercise, we can ignore the GMT suffix
+- Deluge tends to help identify and convert data types automatically, which is applicable to date time datatypes. Fortunately for us, we can replace "T" with a space. By doing so, the GMT suffix will be truncated by Deluge.
+- If you're using purely for date time comparison (to find out which is more recent / earlier) like in this exercise, we can ignore the GMT suffix.
 
 ```javascript
 // Format the Dates
-date1_f = date1.left(date1.indexOf("T")).toDate() + " " + date1.subString(date1.indexOf("T")+1,date1.lastIndexOf("-"));
-date2_f = date2.left(date2.indexOf("T")).toDate() + " " + date2.subString(date1.indexOf("T")+1,date2.lastIndexOf("-"));
+date1_f = date1.replaceAll("T"," ").toDateTime();
+date2_f = date2.replaceAll("T"," ").toDateTime();
 
 info "Formatted Dates";
 info date1_f;
@@ -37,15 +39,15 @@ info "------------------";
 ```
 
 ### Compare
-- Now that you've converted the date time fields to the required string format, use the `.toDateTime()` function to convert the string to an actual date time field and make the comparison.
+- Now that you've converted the date time fields to the required date time datatype format, with the help of the `.toDateTime()`, we can perform the date comparison.
 
 ```javascript
 // Compare
 info "Compare";
 info "date1_f > date2_f";
-info date1_f.toDateTime() > date2_f.toDateTime();
+info date1_f > date2_f;
 info "date2_f > date1_f";
-info date2_f.toDateTime() > date1_f.toDateTime();
+info date2_f > date1_f;
 ```
 
 ## Use Case
@@ -76,7 +78,7 @@ if (opps.size() > 0)
 			{
 				// Format createdTime
 				createdTime = om.get("Created_Time");
-				createdTime_f = createdTime.left(createdTime.indexOf("T")).toDate() + " " + createdTime.subString(createdTime.indexOf("T")+1,createdTime.lastIndexOf("-"));
+				createdTime_f = createdTime.replaceAll("T"," ").toDateTime();
 				// Make comparison
 				if (latestDate.toDateTime() < createdTime_f.toDateTime())
 				{
@@ -109,4 +111,3 @@ else
 	info "There are no messages for this customer.";
 }
 ```
-
